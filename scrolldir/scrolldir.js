@@ -1,5 +1,7 @@
+// 为将 data-scrolldir 属性添加到 HTML 标签作准备
 let attribute = 'data-scrolldir'
 let dir = 'down' // 'up' or 'down'
+// 获取到 HTML 标签
 let el = document.documentElement
 let win = window
 const body = document.body
@@ -12,10 +14,19 @@ let pivot // "high-water mark"
 let pivotTime = 0
 
 function tick() {
+  /*
+   * 这里获取文档在垂直方向已滚动的像素值
+   *  IE9 不支持 window.scrollY
+   *  TODO： 这里应该直接用 win.pageYOffset
+   */
   let y = win.scrollY || win.pageYOffset
   const t = e.timeStamp
   const furthest = dir === 'down' ? Math.max : Math.min
 
+  /*
+   *  body.offsetHeight 返回 body 像素高度（包含垂直内边距及边框），且为整数
+   *  MDN：https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLElement/offsetHeight
+   */
   // Apply bounds to handle rubber banding
   const yMax = body.offsetHeight - win.innerHeight
   y = Math.max(0, y)
